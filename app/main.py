@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import signal
 import sys
 
 from printer import printer
@@ -32,3 +33,4 @@ if __name__ == "__main__":
 
     logger.debug(args)
     main(args)
+    signal.pause()

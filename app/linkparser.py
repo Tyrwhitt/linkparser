@@ -7,7 +7,11 @@ class linkparser():
     @staticmethod
     def getlinks(url):
         logger = logging.getLogger("linkparser")
-        r = requests.get(url)
+        try:
+            r = requests.get(url)
+        except requests.exceptions.ConnectionError as e:
+            logger.warn(f"Failed to get {url} with exception\n{e}")
+            return {}
         if r.ok:
             content = r.text.replace("\n", "")
             logger.debug(f"Page content dump: {content}")
