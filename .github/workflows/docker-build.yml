@@ -21,7 +21,8 @@ jobs:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
 
+    #Hard coded namespace in image name, since my username has capital T. Some workaround ideas https://github.com/orgs/community/discussions/25768
     - name: Docker build
       run: |
-        docker build  -f Dockerfile -t ghcr.io/${{github.actor}}/linkparser:$(git rev-parse --short HEAD) .
-        docker push ghcr.io/${{github.actor}}/linkparser:$(git rev-parse --short HEAD)
+        docker build  -f Dockerfile -t ghcr.io/tyrwhitt/linkparser:$(git rev-parse --short HEAD) .
+        docker push ghcr.io/tyrwhitt/linkparser:$(git rev-parse --short HEAD)
