@@ -1,27 +1,29 @@
+#!/usr/bin/env python
 import argparse
 import logging
 import os
 import signal
 import sys
+from os.path import basename
 
 from printer import printer
 from linkparser import linkparser
 
 def main(args):
-    links = {}
-    for url in args.url:
-        links.update(linkparser.getlinks(url))
-
+    """
+    Loop over input urls for request and print
+    """
     p = printer(args.output)
-    p.print(links)
+    for url in args.url:
+        p.print(linkparser.getlinks(url))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="LinkParser",
+        prog=basename(__file__),
         description="List all links in a web page"
     )
-    parser.add_argument("-o", "--output", choices=["stdout","json"], default="stdout")
-    parser.add_argument("-u", "--url", action="append", default=[])
+    parser.add_argument("-o", "--output", help="Output format, default stdout", choices=["stdout","json"], default="stdout")
+    parser.add_argument("-u", "--url", help="Target url", action="append", default=[])
     args = parser.parse_args()
 
     logger = logging.getLogger("LinkParser")

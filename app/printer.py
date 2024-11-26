@@ -3,6 +3,9 @@ import logging
 import urllib.parse
 
 class printer():
+    """
+    Output formatting and actual output. JSON output only prints input with json module. Stdout joins baseurl for each path before printing.
+    """
     def __init__(self, outputType):
         if outputType == "json":
             self.print = self._outputJson

@@ -7,6 +7,7 @@ class linkparser():
     @staticmethod
     def getlinks(url):
         logger = logging.getLogger("linkparser")
+        # Get user provided url content
         try:
             r = requests.get(url)
         except requests.exceptions.ConnectionError as e:
@@ -18,14 +19,16 @@ class linkparser():
         else:
             raise Exception(f"Failed to get url {url} with status {r.status_code}")
 
+        # Search for <a> tags in response, expression should match all link tags, regardles extra attributes
         expression = "<a.*?>"
         res = re.findall(expression, content)
+        # Find values of href attributes in link tags
         expression = "href\\s?=\\s?(.*?)[ >]"
-        links = {}
+        links = {} # Link dict, baseurl is the key and paths are values. Printer class handles formatting for output
         for link in res:
             m = re.search(expression, link)
             if m:
-                parsed = urllib.parse.urlparse(m.group(1).strip("\"'"))
+                parsed = urllib.parse.urlparse(m.group(1).strip("\"'")) # Remove quotes, if any
                 if parsed.hostname:
                     baseurl = f"{parsed.scheme}://{parsed.hostname}"
                 else:
