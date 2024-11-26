@@ -14,10 +14,10 @@ class printer():
 
     def _outputJson(self, links):
         self.logger.debug(f"Printing in JSON format {links}")
-        print(json.dumps(links, indent = 4))
+        print(json.dumps(links, indent = 4), flush=True)
 
     def _outputStdout(self, links):
         self.logger.debug(f"Printing in stdout format {links}")
         for url, linkList in links.items():
             for link in linkList:
-                print(urllib.parse.urljoin(url, link))
+                print(urllib.parse.urljoin(url, link), flush=True)
