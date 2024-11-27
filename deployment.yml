@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: link-parser
+  name: linkparser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: link-parser
+  template:
+    metadata:
+      labels:
+        app: link-parser
+    spec:
+      containers:
+      - image: ghcr.io/tyrwhitt/linkparser:1c3f00d
+        name: linkparser
+        args: 
+        - -o
+        - json
+        - -u
+        - https://yle.fi
+        - -u
+        - https://sellan.eu
