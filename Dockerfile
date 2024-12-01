@@ -1,6 +1,6 @@
 FROM python:3.14.0a2-slim
 
-RUN apt-get update && apt-get upgrade
+RUN apt-get update && apt-get upgrade -y
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 

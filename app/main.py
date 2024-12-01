@@ -13,6 +13,11 @@ def main(args):
     """
     Loop over input urls for request and print
     """
+    if args.create_readinessprobe_file:
+        readyFilePath = "/tmp/linkparser-started"
+        if not os.path.exists(readyFilePath):
+            with open(readyFilePath, "a") as f:
+                f.write("")
     p = printer(args.output)
     for url in args.url:
         p.print(linkparser.getlinks(url))
@@ -24,6 +29,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("-o", "--output", help="Output format, default stdout", choices=["stdout","json"], default="stdout")
     parser.add_argument("-u", "--url", help="Target url", action="append", default=[])
+    parser.add_argument("--create-readinessprobe-file", action="store_true")
     args = parser.parse_args()
 
     logger = logging.getLogger("LinkParser")
