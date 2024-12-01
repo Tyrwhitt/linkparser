@@ -15,12 +15,20 @@ spec:
         app: link-parser
     spec:
       containers:
-      - image: ghcr.io/tyrwhitt/linkparser:1c3f00d
+      - image: ghcr.io/tyrwhitt/linkparser:IMAGE_TAG
         name: linkparser
-        args: 
+        args:
+        - --create-readinessprobe-file
         - -o
         - json
         - -u
         - https://yle.fi
         - -u
         - https://sellan.eu
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/linkparser-started
+          initialDelaySeconds: 5
+          periodSeconds: 5

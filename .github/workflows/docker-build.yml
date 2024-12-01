@@ -1,4 +1,4 @@
-name: Build docker image
+name: Build and deploy app
 
 on: workflow_dispatch
 
@@ -8,11 +8,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      KUBECRT: ${{ secrets.KUBECONFIG }}
+      KUBECONFIG: /tmp/kubeconfig
+
     steps:
     - uses: actions/checkout@v4
-
-    - name: Debug
-      run: env | sort
 
     - name: Login to ghcr
       uses: docker/login-action@v1
@@ -26,3 +27,17 @@ jobs:
       run: |
         docker build  -f Dockerfile -t ghcr.io/tyrwhitt/linkparser:$(git rev-parse --short HEAD) .
         docker push ghcr.io/tyrwhitt/linkparser:$(git rev-parse --short HEAD)
+
+    - name: Setup kubeconfig
+      run: |
+        echo "$KUBECRT" > /tmp/kubeconfig
+
+    - name: Configure image tag to deployment.yml
+      run: |
+        sed -i "s/IMAGE_TAG/$(git rev-parse --short HEAD)/" deployment.yml
+        cat deployment.yml
+    - name: Deploy to k3s
+      run: kubectl apply -f deployment.yml
+
+    - name: Verify deployment is started
+      run: kubectl rollout status deployment linkparser
